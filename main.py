@@ -49,7 +49,6 @@ def scraping(url_list: list, last_id: int, now: datetime) -> list:
           data.append({"id": last_id, "url": get_url, "create_at": now})
           last_id += 1
 
-        # 結果をリストに追加
     return data
 
 def convert_to_dataframe(data: list, file_name) -> pd.DataFrame:
