@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import pandas as pd
 
+# 80KBを超えるファイルはバックアップを取って新規ファイルを作成する
+MAX_FILE_SIZE = 80 * 1024
 
 def get_last_id(file_name: str) -> int:
     """ tsvファイルの最後のid番号を取得する
@@ -91,7 +93,7 @@ def concat_tsv(df: pd.DataFrame, file_list: list, join_file_name) -> None:
     if file_list:
       df = pd.concat([pd.read_csv(f, sep='\t', encoding='utf-8') for f in file_list])
       df = df.drop_duplicates(subset="url")
-      _backup_file(join_file_name)
+      _backup_file(join_file_name, file_size=MAX_FILE_SIZE)
       df.to_csv(join_file_name, sep='\t', index=False)
 
 def _backup_file(file_name: str, file_size=80) -> None:
