@@ -1,4 +1,6 @@
+import glob
 import os
+import re
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -86,9 +88,33 @@ def concat_tsv(df: pd.DataFrame, file_list: list, join_file_name) -> None:
     Returns:
         None
     """
-    df = pd.concat([pd.read_csv(f, sep='\t', encoding='utf-8') for f in file_list])
-    df = df.drop_duplicates(subset="url")
-    df.to_csv(join_file_name, sep='\t', index=False)
+    if file_list:
+      df = pd.concat([pd.read_csv(f, sep='\t', encoding='utf-8') for f in file_list])
+      df = df.drop_duplicates(subset="url")
+      df.to_csv(join_file_name, sep='\t', index=False)
+
+def match_file_name(dir_name: str, today: str) -> tuple:
+    """ ファイル名を取得
+
+    Args:
+        dir_name (str): ディレクトリ名
+        today (str): 今日の日付
+
+    Returns:
+        tuple: ファイル名とファイルリスト
+    """
+
+    # data/ 配下のファイル名が output_YYYYMMDD.tsv のファイルを取得
+    file_name = f"{dir_name}output_{today}.tsv"
+    # 'data/'ディレクトリ下のすべての'.tsv'ファイルを取得
+    file_list = glob.glob(f"{dir_name}*.tsv")
+    # 正規表現パターンを作成
+    pattern = re.compile(re.escape(dir_name) + r'output_\d{8}.tsv')
+    # パターンに一致するファイルだけを残す
+    match_list = [f for f in file_list if pattern.match(f)]
+    print('match_list: ', match_list)
+
+    return file_name, match_list
 
 def main():
     """ メイン関数 """
@@ -105,12 +131,19 @@ def main():
     if not os.path.exists(dir_name):
       os.mkdir(dir_name)
 
-    file_name = f"{dir_name}output_{today}.tsv"
+    file_name, match_list = match_file_name(dir_name=dir_name, today=today)
 
     last_id = get_last_id(file_name)
     data = scraping(url_list, last_id, now)
     df = convert_to_dataframe(data, file_name)
-    concat_tsv(df, file_list=[file_name], join_file_name=f"{dir_name}output_{today}_join.tsv")
+    concat_tsv(
+       df=df,
+       file_list=match_list,
+       join_file_name=f"{dir_name}output_join.tsv"
+    )
+    # match_list を削除
+    for f in match_list:
+      os.remove(f)
 
 if __name__ == "__main__":
   main()
