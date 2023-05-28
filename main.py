@@ -91,7 +91,26 @@ def concat_tsv(df: pd.DataFrame, file_list: list, join_file_name) -> None:
     if file_list:
       df = pd.concat([pd.read_csv(f, sep='\t', encoding='utf-8') for f in file_list])
       df = df.drop_duplicates(subset="url")
+      _backup_file(join_file_name)
       df.to_csv(join_file_name, sep='\t', index=False)
+
+def _backup_file(file_name: str, file_size=80) -> None:
+    """ ファイルをバックアップする
+
+    Args:
+        file_name (str): ファイル名
+        file_size (int, optional): ファイルサイズ. Defaults to 80.
+
+    Returns:
+        None
+    """
+    # ファイルサイズが大きくなると、重複チェックに時間がかかるため、新規ファイルを作成する
+    if os.path.exists(file_name) and os.path.getsize(file_name) > file_size:
+      # 元ファイルは、バックアップを取っておく
+      back_file = f"{file_name}_{datetime.now().strftime('%Y%m%d%H%M%S')}.bak"
+      os.rename(file_name, back_file)
+      # bakファイルを圧縮する
+      os.system(f"gzip {back_file}")
 
 def match_file_name(dir_name: str, today: str) -> tuple:
     """ ファイル名を取得
