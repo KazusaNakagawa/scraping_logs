@@ -21,7 +21,6 @@ def task_order(now, hours: int, minutes: int):
     # 現在時刻を取得
     # now = datetime.datetime.now().time()
     # タスク発注可能な時間は, 00:00:00 ~ 00:10:00
-    print('now:', now)
     target_time: datetime = datetime.time(hours, minutes, 0) <= now.time() <= datetime.time(hour=hours, minute=minutes+10, second=0)
     if target_time:
         print("The current time is")
@@ -32,9 +31,9 @@ def task_order(now, hours: int, minutes: int):
         return False
 
 def time_tasks(now, tasks: list):
-    for hour, min in tasks:
+    for hour, min, time_back in tasks:
       if task_order(now, hour, min):
-          return True
+          return int(time_back)
     return False
 
 def get_service_number():
@@ -64,21 +63,24 @@ def target_task_time(now: datetime, service_number: int):
     tasks_second, service_numbers_second = read_file('tasks.ini', 'SECOND_TASKS', 'tasks', 'service_numbers')
     tasks_default, _ = read_file('tasks.ini', 'DEFAULT', 'tasks', None)
 
-    print('service_number:', service_number)
+    print({'service_number:', service_number})
     if service_number in service_numbers_first:
         # pattern1
-        if time_tasks(now, tasks_first):
-            return 60 * 24 + 10
+        time_back = time_tasks(now, tasks_first)
+        if time_back:
+            return time_back + 10
         return 0
     elif service_number in service_numbers_second:
         # pattern2
-        if time_tasks(now, tasks_second):
-            return 60 * 2 + 10
+        time_back = time_tasks(now, tasks_second)
+        if time_back:
+            return time_back + 10
         return 0
     else:
         # default
-        if time_tasks(now, tasks_default):
-            return 60 * 1 + 10
+        time_back = time_tasks(now, tasks_default)
+        if time_back:
+            return time_back + 10
         return 0
 
 def result_time(now: datetime) -> tuple[int, int]:
@@ -97,7 +99,7 @@ def result_time(now: datetime) -> tuple[int, int]:
     return since, until
 
 def main():
-    """"""
+    """メイン処理"""
     now = datetime.datetime.now()
     since, until = result_time(now)
     print({'since:': since, 'until:': until})
