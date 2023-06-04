@@ -16,19 +16,19 @@ import datetime
 import random
 
 
-def check_task_order(now: datetime, hours: int, minutes: int) -> bool:
+def check_task_order(now: datetime, hour: int, minute: int) -> bool:
     """タスク発注する時間かどうかを判定する
 
     Args:
         now (datetime): 現在時刻
-        hours (int): 指定の時間
-        minutes (int): 指定の分
+        hour (int): 指定の時間
+        minute (int): 指定の分
 
     Returns:
         [bool]: 発注する時間になったら、Trueを返す
 
     """
-    target_time: datetime = datetime.time(hours, minutes, 0) <= now.time() <= datetime.time(hour=hours, minute=minutes+10, second=0)
+    target_time: datetime = datetime.time(hour, minute, 0) <= now.time() <= datetime.time(hour, minute+10, 0)
     if target_time:
         print("The current time is")
         # タスク発注する時間を取得
