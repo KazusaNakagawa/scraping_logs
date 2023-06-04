@@ -79,6 +79,28 @@ def convert_to_dataframe(data: list, file_name) -> pd.DataFrame:
 
   return df_slice
 
+
+def upload_tsv():
+    """boto3 を使って S3にアップロードする
+    
+    AWS CLI に情報を設定しておく必要がある
+    
+    """
+    import boto3
+    s3 = boto3.resource('s3')
+    bucket = s3.Bucket('bucket_name')
+    bucket.upload_file('file_name', 'file_name')
+
+    # AWS CLI に情報を設定しておく必要がある
+    # aws configure
+    
+
+
+
+
+
+
+
 def concat_tsv(df: pd.DataFrame, file_list: list, join_file_name) -> None:
     """ tsvファイルを結合して重複urlを削除して出力
 

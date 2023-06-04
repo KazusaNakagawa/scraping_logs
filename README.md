@@ -1,3 +1,11 @@
+
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+
+
 ## About
 
 This project saves the results of web scraping (URLs) to a TSV file.
