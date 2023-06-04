@@ -16,11 +16,18 @@ import datetime
 import random
 
 
-# タスク発注する時間になったら、タスク発注する
-def task_order(now, hours: int, minutes: int):
-    # 現在時刻を取得
-    # now = datetime.datetime.now().time()
-    # タスク発注可能な時間は, 00:00:00 ~ 00:10:00
+def check_task_order(now: datetime, hours: int, minutes: int) -> bool:
+    """タスク発注する時間かどうかを判定する
+
+    Args:
+        now (datetime): 現在時刻
+        hours (int): 指定の時間
+        minutes (int): 指定の分
+
+    Returns:
+        [bool]: 発注する時間になったら、Trueを返す
+
+    """
     target_time: datetime = datetime.time(hours, minutes, 0) <= now.time() <= datetime.time(hour=hours, minute=minutes+10, second=0)
     if target_time:
         print("The current time is")
@@ -30,22 +37,49 @@ def task_order(now, hours: int, minutes: int):
         print("The current time is not")
         return False
 
-def time_tasks(now, tasks: list):
+def time_tasks(now: datetime, tasks: list) -> int or bool:
+    """タスク発注する時間を取得する
+
+    Args:
+        now (datetime): 現在時刻
+        tasks (list): タスク発注する時間のリスト
+
+    Returns:
+        [int or bool]: タスク発注する時間を取得する
+
+    """
     for hour, min, time_back in tasks:
-      if task_order(now, hour, min):
+      if check_task_order(now, hour, min):
           return int(time_back)
     return False
 
-def get_service_number():
-    # サービス番号を取得
+def get_service_number() -> int:
+    """サービス番号を取得する
+
+    Returns:
+        [int]: サービス番号を取得する
+
+    """
     service_number = random.randint(1, 15)
     return service_number
 
 def read_file(file_name: str, section: str, tasks_key: str, service_numbers_key=None) -> tuple:
+    """ファイルを読み込む
+
+    Args:
+        file_name (str): ファイル名
+        section (str): セクション名
+        tasks_key (str): タスクキー
+        service_numbers_key (str, optional): サービス番号キー. Defaults to None.
+
+    Returns:
+        [tuple]: タスクとサービス番号を返す
+
+    """
 
     config_ini = configparser.ConfigParser()
     config_ini.read(file_name, encoding='utf-8')
-    
+
     tasks_str = config_ini[section][tasks_key]
     tasks = ast.literal_eval(tasks_str)
 
@@ -57,7 +91,17 @@ def read_file(file_name: str, section: str, tasks_key: str, service_numbers_key=
     else:
         return tasks, None
 
-def target_task_time(now: datetime, service_number: int):
+def target_task_time(now: datetime, service_number: int) -> int:
+    """発注する時間を取得する
+
+    Args:
+        now (datetime): 現在時刻
+        service_number (int): サービス番号
+
+    Returns:
+        [int]: 発注する時間を取得する
+
+    """
 
     tasks_first, service_numbers_first = read_file('tasks.ini', 'FIRST_TASKS', 'tasks', 'service_numbers')
     tasks_second, service_numbers_second = read_file('tasks.ini', 'SECOND_TASKS', 'tasks', 'service_numbers')
@@ -84,7 +128,15 @@ def target_task_time(now: datetime, service_number: int):
         return 0
 
 def result_time(now: datetime) -> tuple[int, int]:
-    """発注する時間を取得する"""""
+    """発注する時間を取得する
+
+    Args:
+        now (datetime): 現在時刻
+
+    Returns:
+        [tuple[int, int]]: 発注する時間を取得する
+
+    """
     target_time = target_task_time(now, service_number=get_service_number())
     if target_time == 0:
         return 0, 0
