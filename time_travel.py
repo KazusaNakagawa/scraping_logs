@@ -107,7 +107,7 @@ def target_task_time(now: datetime, service_number: int) -> int:
     tasks_second, service_numbers_second = read_file('tasks.ini', 'SECOND_TASKS', 'tasks', 'service_numbers')
     tasks_default, _ = read_file('tasks.ini', 'DEFAULT', 'tasks', None)
 
-    print({'service_number:', service_number})
+    print({'service_number:': service_number})
     if service_number in service_numbers_first:
         # pattern1
         time_back = time_tasks(now, tasks_first)
