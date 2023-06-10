@@ -15,3 +15,9 @@ pip install -r requirements.txt
 # 3. Execute the script
 python main.py
 ```
+
+## test
+
+  ```bash
+  ptthon -m unittest
+  ```

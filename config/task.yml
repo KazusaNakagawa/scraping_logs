@@ -1,20 +1,20 @@
 time_interval:
   default:
     interval:
-      - (0, 0)
-      - (4, 0)
-      - (8, 0)
+      - 0.0
+      - 4.0
+      - 8.0
   pattern1: # 1日/回
     interval:
-      - (0, 0)
+      - 0.0
     service_numbers:
       - b008
       - b009
       - b010
   pattern2:
     interval:
-      - (15, 0)
-      - (23, 0)
+      - 15.0
+      - 23.0
     service_numbers:
       - b005
       - b006
