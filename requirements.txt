@@ -36,7 +36,6 @@ PyYAML==6.0
 pyzmq==25.1.0
 requests==2.31.0
 schedule==1.2.0
-scraping-logs==0.1
 six==1.16.0
 soupsieve==2.4.1
 stack-data==0.6.2
