@@ -8,7 +8,7 @@ class TestTask(unittest.TestCase):
         """Test _get_time_interval function"""
         tasks = [0.0, 4.5, 10.0, 15.5, 23.5]
         mocks_now = [
-            datetime(2021, 4, 19, 0, 8, 0),
+            datetime(2021, 4, 19, 0, 10, 0),
             datetime(2021, 4, 19, 4, 36, 0),
             datetime(2021, 4, 19, 10, 6, 59),
             datetime(2021, 4, 19, 15, 39, 0),
