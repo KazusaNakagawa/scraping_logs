@@ -4,3 +4,6 @@
 
 # Except this file
 data/
+
+# Ignore everything in this directory
+__pycache__/
