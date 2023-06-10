@@ -15,44 +15,6 @@ import ast
 import datetime
 import random
 
-
-def check_task_order(now: datetime, hour: int, minute: int) -> bool:
-    """タスク発注する時間かどうかを判定する
-
-    Args:
-        now (datetime): 現在時刻
-        hour (int): 指定の時間
-        minute (int): 指定の分
-
-    Returns:
-        [bool]: 発注する時間になったら、Trueを返す
-
-    """
-    target_time: datetime = datetime.time(hour, minute, 0) <= now.time() <= datetime.time(hour, minute+10, 0)
-    if target_time:
-        print("The current time is")
-        # タスク発注する時間を取得
-        return True
-    else:
-        print("The current time is not")
-        return False
-
-def time_tasks(now: datetime, tasks: list) -> int or bool:
-    """タスク発注する時間を取得する
-
-    Args:
-        now (datetime): 現在時刻
-        tasks (list): タスク発注する時間のリスト
-
-    Returns:
-        [int or bool]: タスク発注する時間を取得する
-
-    """
-    for hour, min, time_back in tasks:
-      if check_task_order(now, hour, min):
-          return int(time_back)
-    return False
-
 def get_service_number() -> int:
     """サービス番号を取得する
 
